@@ -1,18 +1,20 @@
 import { Component } from 'react/cjs/react.production.min';
 
 import MarvelService from '../../services/MarvelService';
-import ErroeMessage from '../errorMessage/ErrorMessage';
+import ErrorMessage from '../errorMessage/ErrorMessage';
 
 import './randomChar.scss';
 
 import mjolnir from '../../resources/img/mjolnir.png';
-import Spinner from '../spinner/Spiner';
+import Spinner from '../spinner/Spinner';
 
 class RandomChar extends Component {
     state = {
         char: {},
         loading: true,
-        error: false
+        error: false,
+        notAvalable: false,
+        style: {objectFit: 'cover'}
     }
     marvelService = new MarvelService();
 
@@ -22,7 +24,7 @@ class RandomChar extends Component {
     }
 
     componentWillUnmount() {
-        clearInterval(this.timeId);
+        // clearInterval(this.timeId);
     }
 
     onCharLoaded = (char) => {
@@ -47,8 +49,8 @@ class RandomChar extends Component {
     }
 
     render() {
-        let {char, loading, error} = this.state;
-        const errorMessage = error ? <ErroeMessage/> : null;
+        let {char, loading, error, notAvalable, style} = this.state;
+        const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
         return (
             <div className="randomchar">
@@ -62,7 +64,7 @@ class RandomChar extends Component {
                         Or choose another one
                     </p>
                     <button className="button button__main">
-                        <div className="inner">try it</div>
+                        <div onClick={this.updateChar} className="inner">try it</div>
                     </button>
                     <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
                 </div>
@@ -72,7 +74,11 @@ class RandomChar extends Component {
 
 }
 const View = ({char}) => {
-    let {name, description, thumbnail, homepage, wiki} = char;
+    let {name, description, thumbnail, homepage, wiki, notAvalable, style} = char;
+    console.log(thumbnail)
+    if (/image_not_available.jpg/i.test(thumbnail)) {
+        style= {objectFit: 'contain'}
+    }
     if (description === '') {
         description = 'No character data'
     }
@@ -86,9 +92,11 @@ const View = ({char}) => {
         description = array.join('');
     }
 
+    // <img {notAvalable ? style={{objectFit: 'contain'} : style={{objectFit: 'cover'}}/>}
     return (
         <div className="randomchar__block">
-            <img src={thumbnail} alt="Random character" className="randomchar__img"/>
+            <img style={style}
+                src={thumbnail} alt="Random character" className="randomchar__img"/>
             <div className="randomchar__info">
                 <p className="randomchar__name">{name}</p>
                 <p className="randomchar__descr">
