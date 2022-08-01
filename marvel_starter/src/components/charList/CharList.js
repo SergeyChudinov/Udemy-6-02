@@ -31,6 +31,9 @@ class CharList extends Component {
                 loading: false
             }))
     }
+    onClick = (id) => {
+        this.props.onCharSelected(id);
+    }
 
     renderItems(arr) {
         const items =  arr.map((item) => {
@@ -40,7 +43,8 @@ class CharList extends Component {
             }
             
             return (
-                <li 
+                <li onClick={() => this.onClick(item.id)} 
+                // <li onClick={() => this.props.onCharSelected(item.id)} 
                     className="char__item"
                     key={item.id}>
                         <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
