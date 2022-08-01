@@ -13,8 +13,6 @@ class RandomChar extends Component {
         char: {},
         loading: true,
         error: false,
-        notAvalable: false,
-        style: {objectFit: 'cover'}
     }
     marvelService = new MarvelService();
 
@@ -33,6 +31,11 @@ class RandomChar extends Component {
             loading: false,
         });
     }
+    onCharLoading = () => {
+        this.setState({
+            loading: true,
+        });
+    }
     onError = () => {
         this.setState({
             loading: false,
@@ -41,7 +44,8 @@ class RandomChar extends Component {
     }
 
     updateChar = () => {
-        const id = Math.floor(Math.random() * (1011401 - 1011000) + 1011000)
+        const id = Math.floor(Math.random() * (1011401 - 1011000) + 1011000);
+        this.onCharLoading();
         this.marvelService
             .getCharacter(id)
             .then(this.onCharLoaded)
@@ -49,7 +53,7 @@ class RandomChar extends Component {
     }
 
     render() {
-        let {char, loading, error, notAvalable, style} = this.state;
+        let {char, loading, error} = this.state;
         const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
         return (
@@ -74,8 +78,8 @@ class RandomChar extends Component {
 
 }
 const View = ({char}) => {
-    let {name, description, thumbnail, homepage, wiki, notAvalable, style} = char;
-    console.log(thumbnail)
+    let {name, description, thumbnail, homepage, wiki} = char;
+    let style = {objectFit: 'cover'}
     if (/image_not_available.jpg/i.test(thumbnail)) {
         style= {objectFit: 'contain'}
     }
