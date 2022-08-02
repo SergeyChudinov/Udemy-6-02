@@ -20,6 +20,7 @@ class CharList extends Component {
     }
 
     updateChars = () => {
+        // this.foo.bar = 0;
         this.marvelService
             .getAllCharacters()
             .then(charList => this.setState({
